@@ -1,0 +1,25 @@
+{
+  "name": "essenza",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thapasampada/ESSENZA.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "express": "^5.1.0",
+    "nodemon": "^3.1.10"
+  },
+  "bugs": {
+    "url": "https://github.com/thapasampada/ESSENZA/issues"
+  },
+  "homepage": "https://github.com/thapasampada/ESSENZA#readme",
+  "description": ""
+}
