@@ -1,20 +1,23 @@
-const express = require('express')
-const colors = require('colors');
+import express from 'express';
+import colors from 'colors';
+import dotenv from 'dotenv';
+
+//configure env
+dotenv.config();
 
 //rest object
-const app = express()
+const app = express();
 
 //rest api
-app.get('/',(req, res) => {
-    res.send({
-        message:'Welcome to ESSENZA'
-    })
-})
+app.get('/', (req, res) => {
+  console.log("Homepage route accessed");
+  res.send('<h1 style="color: red;">✨ Updated ESSENZA Homepage ✨</h1>');
+});
 
-//PORT
-const PORT =8080
+//secure port
+const PORT = process.env.PORT || 8081;
 
 //run listen
 app.listen(PORT,() => {
-    console.log(`Server Running on ${PORT}`.bgCyan.white);
+    console.log(`Server Running on ${process.env.DEV_MODE} mode on port ${PORT}`.bgCyan.white);
 });
