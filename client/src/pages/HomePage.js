@@ -1,7 +1,9 @@
 import React, { useRef } from 'react';
 import Layout from '../components/Layout/Layout';
+import { useAuth } from '../context/auth';
 
 const HomePage = () => {
+  const[auth,setAuth]=useAuth()
     const sliderRef = useRef(null);
 
   const scrollBestSellers = (direction) => {
@@ -13,6 +15,7 @@ const HomePage = () => {
 
     return (
         <Layout title={'Home - Essenza Perfume E-Commerce'}>
+          <pre>{JSON.stringify(auth,null,4)} </pre>
             <section class="hero">
         <div class="container hero_content">
             <div class="hero_heading">
