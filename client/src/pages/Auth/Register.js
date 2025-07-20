@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import Layout from "./../../components/Layout/Layout";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-import "../../styles/AuthStyles.css"; // ✅ Correct casing
+import React,{useState} from 'react'
+import Layout from '../../components/Layout/Layout.js';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import "../../styles/AuthStyles.css"; 
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -13,11 +13,11 @@ const Register = () => {
   const [address, setAddress] = useState("");
   const navigate = useNavigate();
 
-  // form function
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  //form function
+  const handelSubmit = async (e) => {
+    e.preventDefault()
     try {
-      const res = await axios.post("/api/v1/auth/register", {
+      const res = await axios.post(`${process.env.REACT_APP_API}/api/v1/auth/register`, {
         name,
         email,
         password,
@@ -36,10 +36,11 @@ const Register = () => {
     }
   };
 
+
   return (
-    <Layout title="Register - Ecommer App">
+    <Layout title="Register">
       <div className="form-container">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handelSubmit}>
           <h4 className="title">REGISTER FORM</h4>
           <div className="mb-3">
             <input
@@ -98,7 +99,7 @@ const Register = () => {
         </form>
       </div>
     </Layout>
-  );
-};
+  )
+}
 
-export default Register;
+export default Register

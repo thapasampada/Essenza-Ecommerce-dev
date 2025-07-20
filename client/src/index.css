@@ -167,8 +167,8 @@ font-family: "Playfair", serif*/
     height: auto;
 }
 
-/*Home Products css*/
-.home-products {
+/*Best Sellers css*/
+.best-sellers {
   background-color: #FAF1E4; 
   padding: 60px 0;
   overflow: hidden;
@@ -187,11 +187,8 @@ font-family: "Playfair", serif*/
 }
 
 /* Scroll Buttons */
-.product-slider-wrapper {
+.product-slider-container {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .scroll-btn {
@@ -209,13 +206,14 @@ font-family: "Playfair", serif*/
   cursor: pointer;
 }
 
-.scroll-btn.left {
+.scroll-left {
   left: 10px;
 }
 
-.scroll-btn.right {
+.scroll-right {
   right: 10px;
 }
+
 
 .product-slider {
   display: flex;
