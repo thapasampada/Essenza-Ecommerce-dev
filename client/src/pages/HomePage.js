@@ -1,10 +1,16 @@
 import React from 'react';
 import Layout from '../components/Layout/Layout';
+import {useAuth} from '../context/auth';
 
 const HomePage = () => {
+  const [auth, setAuth] = useAuth();
     return (
         <Layout title={'Home - Essenza Perfume E-Commerce'}>
-            <section class="hero">
+          <h1>Welcome to Essenza Perfume E-Commerce</h1>
+          <pre>
+            {JSON.stringify(auth, null, 4)}
+          </pre>
+            {/* <section class="hero">
         <div class="container hero_content">
             <div class="hero_heading">
                 <h1>Your Scent,<br />Your Stye!</h1>
@@ -79,7 +85,7 @@ const HomePage = () => {
         </div>
       </div>
     </div>
-  </section>
+  </section> */}
         </Layout>
     );
 };

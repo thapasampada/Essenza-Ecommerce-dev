@@ -4,7 +4,7 @@ import JWT from "jsonwebtoken";
 
 export const registerController = async (req, res) =>{
     try {
-        const { name, email, password, phone, address } = req.body;
+        const { name, email, password, phone, address, answer } = req.body;
         //validations
         if(!name){
            return res.send({message: 'Name is required'}); 
@@ -20,6 +20,9 @@ export const registerController = async (req, res) =>{
         }
         if(!address){
            return res.send({message: 'Address is required'});
+        }
+        if(!answer){
+           return res.send({message: 'Security answer is required'});
         }
 
         //check user
@@ -39,7 +42,8 @@ export const registerController = async (req, res) =>{
             email,
             phone,
             address,
-            password: hashedPassword
+            password: hashedPassword,
+            answer
         }).save();
 
         res.status(201).send({
@@ -98,7 +102,8 @@ export const loginController = async(req, res) =>{
                 name: user.name,
                 email: user.email,
                 phone: user.phone,
-                address: user.address
+                address: user.address,
+                role: user.role,
             },
             token
         });
@@ -111,6 +116,32 @@ export const loginController = async(req, res) =>{
         });
     }
 };
+
+//Forgot Password Controller
+export const forgotPasswordController = async (req, res) => {
+    try {
+        const { email, answer, newPassword } = req.body;
+
+        // Validations
+        if (!email || !answer || !newPassword) {
+            return res.status(400).send({ success: false, message: "All fields are required" });
+        }
+
+        // Check user
+        const user = await userModel.findOne({ email });
+        if (!user) {
+            return res.status(404).send({ success: false, message: "User not found" });
+        }
+        const hashed = await hashPassword(newPassword);
+        await userModel.findByIdAndUpdate(user._id, {
+            password: hashed,})
+        res.status(200).send({ success: true, message: "Password reset successful" });
+    } catch (error) {
+        console.error("Error in forgotPasswordController:", error);
+        res.status(500).send({ success: false, message: "Internal server error" });
+    }
+};
+
 
 //test controller
 export const testController = (req, res) => {

@@ -11,6 +11,7 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+  const [answer, setAnswer] = useState("");
   const navigate = useNavigate();
 
   //form function
@@ -23,6 +24,7 @@ const Register = () => {
         password,
         phone,
         address,
+        answer
       });
       if (res && res.data.success) {
         toast.success(res.data.message);
@@ -49,6 +51,7 @@ const Register = () => {
               onChange={(e) => setName(e.target.value)}
               className="form-control"
               placeholder="Enter Your Name"
+              id="Inputname"
               required
               autoFocus
             />
@@ -60,6 +63,7 @@ const Register = () => {
               onChange={(e) => setEmail(e.target.value)}
               className="form-control"
               placeholder="Enter Your Email "
+              id="InputEmail"
               required
             />
           </div>
@@ -70,6 +74,7 @@ const Register = () => {
               onChange={(e) => setPassword(e.target.value)}
               className="form-control"
               placeholder="Enter Your Password"
+              id="InputPassword"
               required
             />
           </div>
@@ -80,6 +85,7 @@ const Register = () => {
               onChange={(e) => setPhone(e.target.value)}
               className="form-control"
               placeholder="Enter Your Phone"
+              id="InputPhone"
               required
             />
           </div>
@@ -90,6 +96,18 @@ const Register = () => {
               onChange={(e) => setAddress(e.target.value)}
               className="form-control"
               placeholder="Enter Your Address"
+              id="InputAddress"
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <input
+              type="text"
+              value={answer}
+              onChange={(e) => setAnswer(e.target.value)}
+              className="form-control"
+              placeholder="Enter Your Security Answer"
+              id="InputAnswer"
               required
             />
           </div>
