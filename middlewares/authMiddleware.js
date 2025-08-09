@@ -1,43 +1,59 @@
-import JWT from 'jsonwebtoken';
-import userModel from '../models/userModel.js';
+import JWT from "jsonwebtoken";
+import userModel from "../models/userModel.js";
 
-
-//Protected routes token base
-
+// Protected routes: verify token
 export const requireSignIn = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).send({ success: false, message: "No token provided" });
+      return res.status(401).send({
+        success: false,
+        message: "No token provided",
+      });
     }
 
     const token = authHeader.split(" ")[1];
-    const decode = JWT.verify(token, process.env.JWT_SECRET);
-    req.user = decode;
+    const decoded = JWT.verify(token, process.env.JWT_SECRET);
+
+    // Attach the full user object without password
+    const user = await userModel.findById(decoded._id).select("-password");
+    if (!user) {
+      return res.status(401).send({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    req.user = user; // now req.user contains user data without password
     next();
   } catch (error) {
     console.error("Error in requireSignIn:", error);
-    res.status(401).send({ success: false, message: "Invalid or expired token" });
+    res.status(401).send({
+      success: false,
+      message: "Invalid or expired token",
+    });
   }
 };
 
-
-
-//admin access
-export const isAdmin = async (req, res, next) => {
+// Admin access check
+export const isAdmin = (req, res, next) => {
   try {
-    const user = await userModel.findById(req.user._id);
-    if (user.role !== 1) {
+    if (!req.user) {
+      return res.status(401).send({
+        success: false,
+        message: "User not authenticated",
+      });
+    }
+    if (req.user.role !== 1) {
       return res.status(403).send({
         success: false,
         message: "Unauthorized Access",
       });
-    } else {
-      next();
     }
+    next();
   } catch (error) {
-    console.log(error);
+    console.error("Error in isAdmin:", error);
     res.status(500).send({
       success: false,
       error: error.message || error,
