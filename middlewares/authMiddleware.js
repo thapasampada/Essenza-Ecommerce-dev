@@ -7,7 +7,7 @@ export const requireSignIn = async (req, res, next) => {
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).send({
+      return res.status(401).json({
         success: false,
         message: "No token provided",
       });
@@ -19,7 +19,7 @@ export const requireSignIn = async (req, res, next) => {
     // Attach the full user object without password
     const user = await userModel.findById(decoded._id).select("-password");
     if (!user) {
-      return res.status(401).send({
+      return res.status(401).json({
         success: false,
         message: "User not found",
       });
@@ -29,7 +29,7 @@ export const requireSignIn = async (req, res, next) => {
     next();
   } catch (error) {
     console.error("Error in requireSignIn:", error);
-    res.status(401).send({
+    res.status(401).json({
       success: false,
       message: "Invalid or expired token",
     });
@@ -40,13 +40,13 @@ export const requireSignIn = async (req, res, next) => {
 export const isAdmin = (req, res, next) => {
   try {
     if (!req.user) {
-      return res.status(401).send({
+      return res.status(401).json({
         success: false,
         message: "User not authenticated",
       });
     }
     if (req.user.role !== 1) {
-      return res.status(403).send({
+      return res.status(403).json({
         success: false,
         message: "Unauthorized Access",
       });
@@ -54,7 +54,7 @@ export const isAdmin = (req, res, next) => {
     next();
   } catch (error) {
     console.error("Error in isAdmin:", error);
-    res.status(500).send({
+    res.status(500).json({
       success: false,
       error: error.message || error,
       message: "Error in admin middleware",

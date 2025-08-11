@@ -33,6 +33,11 @@ router.get("/get-category", requireSignIn, isAdmin, categoryController);
 router.get("/single-category/:id", requireSignIn, isAdmin, singleCategoryController);
 
 // Delete category - only admin
-router.delete("/delete-category/:id", requireSignIn, isAdmin, deleteCategoryController);
+router.delete(
+  "/delete-category/:id",
+  requireSignIn,
+  isAdmin,
+  deleteCategoryController
+);
 
 export default router;
