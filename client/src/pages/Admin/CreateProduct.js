@@ -64,7 +64,7 @@ const CreateProduct = () => {
       formData.append('longevity', longevity);
       formData.append('occasion', occasion);
       formData.append('quantity', quantity);
-      formData.append('tags', JSON.stringify(tags));
+      formData.append('tags', tags.join(',')); 
       formData.append('shipping', shipping);
       const {data} = await axios.post('/api/v1/product/create-product', formData, {
         headers: {

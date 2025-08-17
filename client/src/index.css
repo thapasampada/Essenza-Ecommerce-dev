@@ -281,3 +281,11 @@ font-family: "Playfair", serif*/
   height: 70vh;
   flex-direction: column;
 }
+
+
+/*----------------------------------------------*/
+.product-link{
+  text-decoration: none;
+  color: black !important;
+
+}

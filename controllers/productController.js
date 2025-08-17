@@ -21,6 +21,8 @@ export const createProductController = async (req, res) => {
             tags,
             shipping
         } = req.fields;
+
+        
         const { photo } = req.files;
 
         // Validation
@@ -46,12 +48,15 @@ export const createProductController = async (req, res) => {
             base: fragranceBase ? fragranceBase.split(",").map(s => s.trim()) : []
         };
 
+        const tagsArray = tags ? tags.split(',').map(tag => tag.trim()) : [];
+
+
         // Create product
         const product = new productModel({
             ...req.fields,
             fragranceNotes,
             slug: slugify(name),
-            tags: tags ? tags.split(",").map(s => s.trim()) : []
+            tags: tagsArray
         });
 
         // Attach photo
@@ -213,40 +218,38 @@ export const updateProductController = async (req, res) => {
     base: fragranceBase ? fragranceBase.split(",").map(s => s.trim()) : []
     };
 
+    const tagsArray = tags ? tags.split(",").map(s => s.trim()) : [];
+
     const updateData = {
     ...req.fields,
     slug: slugify(name),
     fragranceNotes,
-    tags: tags ? tags.split(",").map(s => s.trim()) : []
+    tags: tagsArray
     };
 
-    const product = await productModel.findByIdAndUpdate(
-    req.params.productId,
-    updateData,
-    { new: true }
-    );
-
-
+    let product = await productModel.findById(req.params.productId);
     if (!product) {
-    return res.status(404).send({
-        success: false,
-        message: "Product not found",
-    });
+        return res.status(404).send({ success: false, message: "Product not found" });
     }
+
+    // Update fields
+    Object.assign(product, updateData);
 
     // Attach photo if uploaded
     if (photo) {
-    product.photo.data = fs.readFileSync(photo.path);
-    product.photo.contentType = photo.type;
-    await product.save();
+        product.photo.data = fs.readFileSync(photo.path);
+        product.photo.contentType = photo.type;
     }
 
+    // Save once
     await product.save();
+
     res.status(200).send({
-      success: true,
-      message: "Product updated successfully",
-      product,
-    });
+        success: true,
+        message: "Product updated successfully",
+        product
+});
+
   } catch (error) {
     console.error(error);
     res.status(500).send({
