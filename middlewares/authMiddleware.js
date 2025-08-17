@@ -8,11 +8,15 @@ export const requireSignIn = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    if (!authHeader) {
       return res.status(401).send({ success: false, message: "No token provided" });
     }
 
-    const token = authHeader.split(" ")[1];
+    // If header starts with Bearer, split it, otherwise use as is
+    const token = authHeader.startsWith("Bearer ")
+      ? authHeader.split(" ")[1]
+      : authHeader;
+
     const decode = JWT.verify(token, process.env.JWT_SECRET);
     req.user = decode;
     next();
@@ -21,6 +25,7 @@ export const requireSignIn = async (req, res, next) => {
     res.status(401).send({ success: false, message: "Invalid or expired token" });
   }
 };
+
 
 
 

@@ -2,6 +2,7 @@
   "name": "essenza",
   "version": "1.0.0",
   "main": "server.js",
+  "proxy": "http://localhost:8081",
   "type": "module",
   "scripts": {
     "start": "node server.js",
@@ -23,10 +24,12 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
+    "express-formidable": "^1.2.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.16.4",
     "morgan": "^1.10.1",
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "slugify": "^1.6.6"
   },
   "bugs": {
     "url": "https://github.com/thapasampada/ESSENZA/issues"
