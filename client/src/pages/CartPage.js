@@ -64,7 +64,7 @@ const CartPage = () => {
                     <button className='btn btn-danger' onClick={() => removeCartItem(p._id)}>Remove</button>
                   </div>
                 </div>
-              ))
+              )) 
             }
           </div>
           <div className='col-md-4 text-center'>
@@ -72,6 +72,25 @@ const CartPage = () => {
             <p>Total | Checkout | Payment</p>
             <hr />
             <h4>Total: {totalPrice()} </h4>
+            {auth?.user?.address ? (
+              <>
+              <div className='mb-3'>
+                <h4>Current Address</h4>
+                <h5>{auth?.user?.address}</h5>
+                <button className='bth bth-outline-warning' onClick={() => navigate('/dashboard/user/profile')}>Update Address</button>
+              </div>
+              </>
+            ): (
+              <div className='mb-3'>
+                {
+                  auth?.token ? (
+                    <button className='btn btn-outline-warning' onClick={() => navigate('/dashboard/user/profile')}>Update Address</button> 
+                  ): (
+                    <button className='btn btn-outline-warning' onClick={() => navigate('/login',{ state: "/cart"})}>Please Login to Checkout</button> 
+                  )
+                }
+              </div>
+            )}
           </div>
         </div>
        </div>
