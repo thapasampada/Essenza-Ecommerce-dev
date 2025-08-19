@@ -6,9 +6,11 @@ import {IoHomeSharp} from 'react-icons/io5';
 import toast from 'react-hot-toast';
 import { SearchProvider } from '../../context/Search';
 import SearchInput from '../Form/SeachInput'
+import useCategory from '../../hooks/useCategory';
 
 const Header = () => {
   const [auth, setAuth] = useAuth();
+  const categories = useCategory();
   const handelLogout = () => {
     setAuth({
       ...auth,
@@ -32,8 +34,35 @@ const Header = () => {
         <li className="nav-item">
           <NavLink to="/" className="nav-link"><IoHomeSharp /></NavLink>
         </li>
+        <li className="nav-item dropdown">
+                <Link
+                  className="nav-link dropdown-toggle"
+                  to={"/categories"}
+                  data-bs-toggle="dropdown"
+                >
+                  Categories
+                </Link>
+                <ul className="dropdown-menu">
+                  <li>
+                    <Link className="dropdown-item" to={"/categories"}>
+                      All Categories
+                    </Link>
+                  </li>
+                  {categories?.map((c) => (
+                    <li key={c._id}>
+                      <Link className="dropdown-item" to={`/category/${c.slug}`}>
+                        {c.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+        </li>
         <li className="nav-item">
           <NavLink to="/quiz" className="nav-link">Perfume Quiz</NavLink>
+          <ul className="dropdown-menu">
+            <li><NavLink to={`/dashboard/${auth?.user?.role === 1 ? "admin" : "user"}`} className="dropdown-item">Dashboard</NavLink></li>
+            <li><NavLink onClick={handelLogout} to="/login" className="dropdown-item">LogOut</NavLink></li>
+          </ul>
         </li>
         {
           !auth.user ? (<>
