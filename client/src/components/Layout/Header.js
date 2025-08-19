@@ -4,6 +4,8 @@ import {GiDelicatePerfume} from 'react-icons/gi';
 import {useAuth} from '../../context/auth';
 import {IoHomeSharp} from 'react-icons/io5';
 import toast from 'react-hot-toast';
+import { SearchProvider } from '../../context/Search';
+import SearchInput from '../Form/SeachInput'
 
 const Header = () => {
   const [auth, setAuth] = useAuth();
@@ -26,6 +28,7 @@ const Header = () => {
     <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
       <Link to="/" className="navbar-brand"><GiDelicatePerfume />ESSENZA</Link>
       <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
+        <SearchInput />
         <li className="nav-item">
           <NavLink to="/" className="nav-link"><IoHomeSharp /></NavLink>
         </li>

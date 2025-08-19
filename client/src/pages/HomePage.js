@@ -3,8 +3,10 @@ import Layout from '../components/Layout/Layout';
 import axios from 'axios';
 import {Checkbox, Radio} from 'antd';
 import { Prices } from '../components/Prices';
+import { useNavigate } from 'react-router-dom'; 
 
 const HomePage = () => {
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [checked, setChecked] = useState([]);
@@ -107,6 +109,7 @@ const HomePage = () => {
     
     return (
         <Layout title={'Home - Essenza Perfume E-Commerce'}>
+        
           <div className='row mt-3'>
             <div className='col-md-2'>
               <h4 className='text-center'>Filter By Category</h4>
@@ -130,20 +133,20 @@ const HomePage = () => {
                 <button className='bth' onClick={() => window.location.reload()}>Reset Filters</button>
               </div>
             </div>
-            <div className='col-md-9'>
+            <div className='col'>
               {JSON.stringify(radio,null,4)}
               <h1 className='text-center'>All Products</h1>
               <h2 className='text-center'>Featured Products</h2>
               <div className='d-flex flex-wrap'>
                 {products?.map((p) =>(
-                  <div className="card m-2" style={{width: '18rem'}}>
+                  <div key={p._id} className="card m-2" style={{width: '18rem'}}>
                     <img src={`/api/v1/product/product-photo/${p._id}`} className="card-img-top" alt={p.name} />
                     <div className="card-body">
                         <h5 className="card-title">{p.name}</h5>
                         <p className="card-text">{p.description.substring(0, 30)}</p>
                         <p className="card-text">Rs.{p.price}</p>
                         <div>
-                          <button className="btn btn-primary">see more details</button>
+                          <button className="btn btn-primary" onClick={() => navigate(`/product/${p.slug}`)}>see more details</button>
                           <button className="btn btn-secondary">Add To Cart</button>
                         </div>
                     </div>
@@ -161,30 +164,34 @@ const HomePage = () => {
             </div>
           </div>
           
-            {/* <section class="hero">
-        <div class="container hero_content">
-            <div class="hero_heading">
-                <h1>Your Scent,<br />Your Stye!</h1>
-                <p>Embark on Your Fragrance Journey Today.</p>
-                <a href="/" class="btn">Explore Now &#x2794;</a>
-            </div>
-            <div class="hero_image">
-                <img src="/images/hero1.jpg" alt="Perfume" />
-            </div>
-        </div>
-     </section>
+    
 
-     
-    <section class="find-scent">
-        <div class="container find-scent_content">
+   {/* 
+   <section class="hero">
+        <div class="container hero_content">
+          <div class="hero_heading">
             <h2>Find Your Scent</h2>
             <p>Discover the perfect fragrance that resonates with your personality and style.</p>
             <a href="" class="btn">Take the Quiz!</a>
-            <img src="/images/hero3.jpg" alt="Quiz Image" />
+          </div>
+          <div class="hero_image">
+            <img src="/images/hero1.jpg" alt="Perfume" />
+          </div>
         </div>
     </section>
-
-    
+   <section class="hero">
+          <div class="container hero_content">
+              <div class="hero_heading">
+                  <h1>Your Scent,<br />Your Stye!</h1>
+                  <p>Embark on Your Fragrance Journey Today.</p>
+                  <a href="/" class="btn">Explore Now &#x2794;</a>
+              </div>
+              <div class="hero_image">
+                  <img src="/images/hero1.jpg" alt="Perfume" />
+                  <img src="/images/hero3.jpg" alt="Quiz Image" />
+              </div>
+          </div>
+        </section> 
   <section className="best-sellers">
     <div class="container">
       <h2 class="section-title">Best Sellers</h2>
