@@ -23,6 +23,7 @@
     "colors": "^1.4.0",
     "concurrently": "^9.2.0",
     "cors": "^2.8.5",
+    "crypto-js": "^4.2.0",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
     "express-formidable": "^1.2.0",
@@ -36,5 +37,8 @@
     "url": "https://github.com/thapasampada/ESSENZA/issues"
   },
   "homepage": "https://github.com/thapasampada/ESSENZA#readme",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "modules": "^0.4.0"
+  }
 }

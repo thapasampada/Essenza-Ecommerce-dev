@@ -1,25 +1,28 @@
-import { useState, useContext, createContext, useEffect } from "react"; 
-
+// context/cart.js
+import { createContext, useContext, useState, useEffect } from "react";
+import axios from "axios";
+import { useAuth } from "./auth";
 
 const CartContext = createContext();
 
-const CartProvider =({children}) =>{
-    const [cart, setCart ]= useState([]);
+export const CartProvider = ({ children }) => {
+  const [cart, setCart] = useState([]);
+  const [auth] = useAuth();
 
-    useEffect(() =>{
-        let existingCartItem = localStorage.getItem('cart')
-        if(existingCartItem) setCart(JSON.parse(existingCartItem))
-    }, [])
+  // Fetch cart when user logs in
+  useEffect(() => {
+    if (auth?.token) {
+      axios.get("http://localhost:8081/api/v1/cart", {
+        headers: { Authorization: auth.token },
+      })
+      .then(res => setCart(res.data?.products || []))
+      .catch(err => console.log(err));
+    } else {
+      setCart([]);
+    }
+  }, [auth]);
 
-    return(
-    <CartContext.Provider value ={[cart, setCart]}> 
-        {children}
-    </CartContext.Provider>
-);
-
+  return <CartContext.Provider value={[cart, setCart]}>{children}</CartContext.Provider>;
 };
 
-//custom hook
-const useCart= () => useContext(CartContext);
-
-export{  useCart, CartProvider  };
+export const useCart = () => useContext(CartContext);

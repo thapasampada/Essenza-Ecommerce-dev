@@ -7,27 +7,21 @@ import userModel from '../models/userModel.js';
 export const requireSignIn = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
+    if (!authHeader) return res.status(401).json({ success: false, message: "No token provided" });
 
-    if (!authHeader) {
-      return res.status(401).send({ success: false, message: "No token provided" });
-    }
+    const token = authHeader.startsWith("Bearer ") ? authHeader.split(" ")[1] : authHeader;
+    const decoded = JWT.verify(token, process.env.JWT_SECRET);
 
-    // If header starts with Bearer, split it, otherwise use as is
-    const token = authHeader.startsWith("Bearer ")
-      ? authHeader.split(" ")[1]
-      : authHeader;
+    const user = await userModel.findById(decoded._id);
+    if (!user) return res.status(401).json({ success: false, message: "User not found" });
 
-    const decode = JWT.verify(token, process.env.JWT_SECRET);
-    req.user = decode;
+    req.user = user; // attach full user object
     next();
   } catch (error) {
     console.error("Error in requireSignIn:", error);
-    res.status(401).send({ success: false, message: "Invalid or expired token" });
+    res.status(401).json({ success: false, message: "Invalid or expired token" });
   }
 };
-
-
-
 
 //admin access
 export const isAdmin = async (req, res, next) => {

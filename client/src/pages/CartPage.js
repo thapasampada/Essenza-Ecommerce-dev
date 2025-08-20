@@ -3,6 +3,8 @@ import Layout from '../components/Layout/Layout'
 import { useCart } from '../context/cart'
 import { useAuth } from '../context/auth'
 import { useNavigate } from 'react-router-dom'
+import axios from "axios";
+import toast from 'react-hot-toast'
 
 const CartPage = () => {
   const [auth, setAuth] = useAuth();
@@ -10,32 +12,63 @@ const CartPage = () => {
   const navigate = useNavigate();
 
   //total price
-  const totalPrice = () => {
-    try{
-      let total = 0;
-      cart?.map((item) => {
-        total = total + item.price;
-      })
-      return total.toLocaleString("en-US", {
-        style: "currency",
-        currency: "NRP",
-      });
-    }catch(error){
-      console.log(error)
-    }
+const totalPrice = () => {
+  try {
+    const total = cart?.reduce((acc, item) => {
+      // If product is nested inside item.product
+      const price = item.product ? item.product.price : item.price;
+      const quantity = item.quantity || 1;
+      return acc + price * quantity;
+    }, 0);
+
+    return total.toLocaleString("en-US", {
+      style: "currency",
+      currency: "NRP",
+    });
+  } catch (error) {
+    console.log(error);
+    return "Rs.0";
   }
+};
+
   // delete cart item
-  const removeCartItem = (pid) => {
-    try{
-      let myCart = [...cart];
-      let index = myCart.findIndex((item) => item._id === pid);
-      myCart.splice(index, 1);
-      setCart(myCart);
-      localStorage.setItem("cart", JSON.stringify(myCart));
-    }catch(error){
+  const removeCartItem = async (pid) => {
+    try {
+      const { data } = await axios.delete(`http://localhost:8081/api/v1/cart/remove/${pid}`, {
+        headers: { Authorization: auth.token },
+      });
+      setCart(data.products);
+      toast.success("Item removed");
+    } catch (error) {
       console.log(error);
+      toast.error("Failed to remove item");
     }
+  };
+
+  //update quantity
+  const updateQuantity = (pid, quantity) => {
+  try {
+    const updatedCart = cart.map((item) => {
+      if (item.product._id === pid) {
+        return { ...item, quantity };
+      }
+      return item;
+    });
+    setCart(updatedCart);
+
+    // Optional: update backend cart if using user-specific cart
+    axios.put(
+      `http://localhost:8081/api/v1/cart/update/${pid}`,
+      { quantity },
+      { headers: { Authorization: auth.token } }
+    ).catch(err => console.log(err));
+  } catch (error) {
+    console.log(error);
+    toast.error("Failed to update quantity");
   }
+};
+
+
   return (
     <Layout>
        <div className='container'>
@@ -53,14 +86,29 @@ const CartPage = () => {
           <div className='col-md-8'>
             {
               cart?.map((p, index) => (
-                <div key={`$(p._id)-${index}`} className='row mb-2 p-3 card flex-row'>
+                <div key={`${p._id}-${index}`} className='row mb-2 p-3 card flex-row'>
                   <div className='col-md-4'>
-                    <img src={`/api/v1/product/product-photo/${p._id}`} className="card-img-top" alt={p.name} />
+                   <img 
+                    src={`http://localhost:8081/api/v1/product/product-photo/${p.product._id}`} 
+                    className="card-img-top" 
+                    alt={p.product.name} 
+                  />
                   </div>
                   <div className='col-md-8'>
-                    <h5 className="card-title">{p.name}</h5>
-                    <p className="card-text">{p.description}</p>
-                    <p className="card-text">Rs.{p.price}</p>
+                    <h5 className="card-title">{p.product.name}</h5>
+                    <p className="card-text">{p.product.description}</p>
+                    <p className="card-text">Rs.{p.product.price}</p>
+                    <div className="d-flex align-items-center mb-2">
+                      <span className="me-2">Quantity:</span>
+                      <input 
+                        type="number" 
+                        min={1} 
+                        value={p.quantity || 1} 
+                        onChange={(e) => updateQuantity(p.product._id, parseInt(e.target.value))} 
+                        className="form-control" 
+                        style={{ width: "70px" }}
+                      />
+                    </div>
                     <button className='btn btn-danger' onClick={() => removeCartItem(p._id)}>Remove</button>
                   </div>
                 </div>
