@@ -301,22 +301,90 @@ export const productCountController = async (req,res) => {
     }
 }
 
-//product list based on page
 export const productListController = async (req,res) => {
+  try {
+    const perPage = 6;
+    const page = req.params.page ? req.params.page : 1;
+    const products = await productModel.find({})
+      .select("-photo")
+      .skip((page-1) * perPage)
+      .limit(perPage)
+      .sort({createdAt: -1});
+
+    res.status(200).send({
+      success: true,
+      products,
+    });
+  } catch(error) {
+    console.log(error);
+    res.status(400).send({
+      success:false,
+      message:'Error in per page controller',
+      error,
+    });
+  }
+}; // ✅ properly close this function
+
+//search product
+export const searchProductController = async (req,res) => {
     try{
-        const perPage = 6
-        const page = req.params.page ? req.params.page : 1
-        const products = await productModel.find({}).select("-photo").skip((page-1) * perPage).limit(perPage).sort({createdAt: -1})
+        const {keyword} = req.params
+        const results = await productModel.find({
+            $or:[
+                {name:{$regex : keyword, $options:"i"}},
+                {description:{$regex : keyword, $options:"i"}},
+            ],
+        }).select("-photo")
+        res.json(results);
+
+    }catch(error){
+        console.log(error)
+        res.status(400).send({
+            success:false,
+            message:'Error in search product API',
+            error,
+        })
+    }
+}
+
+//silmilar products
+export const relatedProdcutController = async (req,res) =>{
+    try{
+        const {pid, cid} =req.params
+        const products = await productModel.find({
+            category:cid,
+            _id:{$ne:pid}
+        }).select("-photo").limit(3).populate("category")
         res.status(200).send({
             success: true,
             products,
         })
-    }
-    catch(error){
+    }catch{error}{
         console.log(error)
         res.status(400).send({
             success:false,
-            message:'Error in per page controller',
+            message:'Error in search product API',
+            error,
+        })
+    }
+}
+
+//get product by category
+export const productCategoryController = async (req,res) => {
+    try{
+        const category = await categoryModel.findOne({slug: req.params.slug})
+        const products = await productModel.find({category}).populate("category")
+        res.status(200).send({
+            success: true,
+            category,
+            products
+        })
+    }
+    catch{error}{
+        console.log(error)
+        res.status(400).send({
+            success:false,
+            message:'Error while getting category wise product',
             error,
         })
     }
