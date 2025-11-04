@@ -34,7 +34,8 @@ const ProductDetails = () => {
  }  
   return (
     <Layout>
-        <div className="row container mt-3">
+        <div className="container mt-3">
+          <div className="row">
           <div className="col-md-6">
             {product?._id ?(
               <img src={`/api/v1/product/product-photo/${product._id}`} className="card-img-top" alt={product.name} />
@@ -68,6 +69,7 @@ const ProductDetails = () => {
                     </div>
                   </div>
                 ))}
+              </div>
               </div>
         </div>
     </Layout>

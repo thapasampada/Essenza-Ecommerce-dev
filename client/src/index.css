@@ -140,6 +140,10 @@ font-family: "Playfair", serif*/
 }
 
 /*Quiz*/
+.selectedvibe{
+  background-color: #333;
+  color: #fff;
+}
 .find-scent{
     background: #FAF1E4;
     padding: 50px 0;

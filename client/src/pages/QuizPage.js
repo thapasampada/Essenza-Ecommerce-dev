@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const QuizPage = () => {
   const [step, setStep] = useState(1);
-  const [answers, setAnswers] = useState({});
+  const [answers, setAnswers] = useState({ tags: [] });
   const [recommendations, setRecommendations] = useState([]);
   const navigate = useNavigate();
 
@@ -38,7 +38,7 @@ const QuizPage = () => {
   // Option styling
   const OptionCard = ({ text, onClick, selected }) => (
     <motion.div
-      whileHover={{ scale: 1.05 }}
+      whileHover={{ boxShadow: "0px 5px 15px rgba(0,0,0,0.3)" }}
       whileTap={{ scale: 0.95 }}
       onClick={onClick}
       className={`cursor-pointer border rounded-xl p-4 shadow-md transition ${
@@ -52,7 +52,7 @@ const QuizPage = () => {
   return (
     <Layout>
       <div className="max-w-2xl mx-auto p-8 bg-gradient-to-br from-pink-50 to-purple-50 rounded-3xl shadow-xl">
-        <h2 className="text-3xl font-extrabold text-center mb-4">✨ Find Your Signature Scent ✨</h2>
+        <h2 className="text-3xl font-extrabold text-center mb-4">Find Your Signature Scent</h2>
         <p className="text-center text-gray-600 mb-6">Step {step} of {totalSteps}</p>
 
         {/* Progress Bar */}
@@ -75,8 +75,8 @@ const QuizPage = () => {
               transition={{ duration: 0.5 }}
               className="grid grid-cols-2 gap-4"
             >
-              <OptionCard text="👔 Male" onClick={() => handleAnswer("gender", "Male")} />
-              <OptionCard text="💃 Female" onClick={() => handleAnswer("gender", "Female")} />
+              <OptionCard text="Male" onClick={() => handleAnswer("gender", "Male")} />
+              <OptionCard text="Female" onClick={() => handleAnswer("gender", "Female")} />
             </motion.div>
           )}
 
@@ -89,7 +89,7 @@ const QuizPage = () => {
               transition={{ duration: 0.5 }}
               className="grid grid-cols-2 gap-4"
             >
-              {["🌙 Night", "❤️ Romantic", "💎 Luxury", "☀️ Daily"].map((occ) => (
+              {["Night", "Romantic", "Luxury", "Daily"].map((occ) => (
                 <OptionCard
                   key={occ}
                   text={occ}
@@ -108,7 +108,7 @@ const QuizPage = () => {
               transition={{ duration: 0.5 }}
               className="grid grid-cols-2 gap-4"
             >
-              {["🌹 Oriental Floral", "🌲 Woody", "🍋 Citrus", "🌿 Fresh", "🌸 Aromatic"].map((sf) => (
+              {["Oriental Floral", "Woody", "Citrus", "Fresh", "Aromatic"].map((sf) => (
                 <OptionCard
                   key={sf}
                   text={sf}
@@ -127,7 +127,7 @@ const QuizPage = () => {
               transition={{ duration: 0.5 }}
               className="grid grid-cols-2 gap-4"
             >
-              {["⏳ Short", "⏱️ Moderate", "⌛ Long-lasting", "♾️ Eternal"].map((l) => (
+              {["Short", "Moderate", "Long-lasting", "Eternal"].map((l) => (
                 <OptionCard
                   key={l}
                   text={l}
@@ -138,37 +138,44 @@ const QuizPage = () => {
           )}
 
           {step === 5 && (
-            <motion.div
-              key="step5"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5 }}
-            >
-              <p className="mb-3 text-lg font-semibold">Pick your vibe (multiple allowed):</p>
-              <div className="flex flex-wrap gap-3 mb-4">
-                {["Warm", "Luxury", "Woody", "Fresh", "Everyday"].map((tag) => (
-                  <span
+          <motion.div
+            key="step5"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5 }}
+          >
+            <p className="mb-3 text-lg font-semibold">Pick your vibe (multiple allowed):</p>
+            <div className="flex flex-wrap gap-3 mb-4">
+              {["Warm", "Luxury", "Woody", "Fresh", "Everyday"].map((tag) => {
+                const isSelected = answers.tags?.includes(tag);
+
+                return (
+                  <motion.span
                     key={tag}
                     onClick={() => handleTagSelect(tag)}
-                    className={`cursor-pointer px-4 py-2 rounded-full border shadow-sm transition ${
-                      answers.tags?.includes(tag)
-                        ? "bg-purple-500 text-white border-purple-500"
-                        : "bg-white hover:bg-gray-100"
+                    whileTap={{ scale: 0.95 }}
+                    className={`cursor-pointer px-4 py-2 rounded-full border shadow-sm font-medium transition-colors duration-200 ${
+                      isSelected
+                        ? "selectedvibe" // selected
+                        : "bg-white text-[#435334] border-[#435334] hover:bg-[#435334] hover:text-white"
                     }`}
+                    
                   >
                     #{tag}
-                  </span>
-                ))}
-              </div>
-              <button
-                onClick={handleSubmit}
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold hover:opacity-90"
-              >
-                🎉 Get My Recommendations
-              </button>
-            </motion.div>
-          )}
+                  </motion.span>
+                );
+              })}
+            </div>
+            <button
+              onClick={handleSubmit}
+              className="btn btn-primary"
+            >
+              Get My Recommendations
+            </button>
+          </motion.div>
+        )}
+
         </AnimatePresence>
 
         {/* Recommendations */}
@@ -178,7 +185,7 @@ const QuizPage = () => {
             animate={{ opacity: 1 }}
             className="mt-8"
           >
-            <h3 className="text-xl font-semibold mb-4 text-center">✨ Recommended Perfumes ✨</h3>
+            <h3 className="text-xl font-semibold mb-4 text-center">Recommended Perfumes</h3>
             <div className="space-y-4">
               {recommendations.map((p) => (
                 <motion.div
@@ -189,7 +196,7 @@ const QuizPage = () => {
                   <h4 className="font-bold text-lg">{p.name}</h4>
                   <p className="text-sm text-gray-600">{p.description}</p>
                   <button
-                    className="mt-3 px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600"
+                    className="btn"
                     onClick={() => navigate(`/product/${p.slug}`)}
                   >
                     View Details

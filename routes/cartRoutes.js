@@ -1,4 +1,5 @@
 import express from "express";
+import mongoose from "mongoose";
 import Cart from "../models/cartModel.js";
 import { requireSignIn } from "../middlewares/authMiddleware.js";
 import { updateCartItemQuantity } from "../controllers/cartController.js";
@@ -46,16 +47,28 @@ router.post("/add", requireSignIn, async (req, res) => {
 });
 
 // Remove product from cart
-router.delete("/remove/:productId", requireSignIn, async (req, res) => {
+router.delete("/remove/:pid", requireSignIn, async (req, res) => {
   try {
-    let cart = await Cart.findOne({ user: req.user._id });
-    cart.products = cart.products.filter(p => p.product.toString() !== req.params.productId);
-    await cart.save();
-    res.json(cart);
+    const userId = req.user._id;
+    const productId = new mongoose.Types.ObjectId(req.params.pid); // 👈 convert to ObjectId
+
+    const cart = await Cart.findOneAndUpdate(
+      { user: userId },
+      { $pull: { products: { product: productId } } },
+      { new: true }
+    ).populate("products.product");
+
+    if (!cart) {
+      return res.status(404).json({ success: false, message: "Cart not found" });
+    }
+
+    res.json({ success: true, products: cart.products });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error("REMOVE CART ERROR:", error);
+    res.status(500).json({ success: false, message: "Failed to remove item", error: error.message });
   }
 });
+
 
 // Update cart item quantity
 router.put("/update/:pid", requireSignIn, updateCartItemQuantity);

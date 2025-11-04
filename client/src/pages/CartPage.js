@@ -32,18 +32,24 @@ const totalPrice = () => {
 };
 
   // delete cart item
-  const removeCartItem = async (pid) => {
-    try {
-      const { data } = await axios.delete(`http://localhost:8081/api/v1/cart/remove/${pid}`, {
-        headers: { Authorization: auth.token },
-      });
+  const removeCartItem = async (pid) => { 
+  try { 
+    const { data } = await axios.delete(
+      `http://localhost:8081/api/v1/cart/remove/${pid}`,
+      { headers: { Authorization: auth.token } }
+    );
+    if (data.success) {
       setCart(data.products);
       toast.success("Item removed");
-    } catch (error) {
-      console.log(error);
+    } else {
       toast.error("Failed to remove item");
     }
-  };
+  } catch (error) { 
+    console.log(error); 
+    toast.error("Failed to remove item"); 
+  } 
+};
+
 
   //update quantity
   const updateQuantity = (pid, quantity) => {
@@ -109,7 +115,7 @@ const totalPrice = () => {
                         style={{ width: "70px" }}
                       />
                     </div>
-                    <button className='btn btn-danger' onClick={() => removeCartItem(p._id)}>Remove</button>
+                    <button className='btn btn-danger' onClick={() => removeCartItem(p.product._id)}>Remove</button>
                   </div>
                 </div>
               )) 
@@ -139,6 +145,7 @@ const totalPrice = () => {
                 }
               </div>
             )}
+            {auth?.token && cart?.length > 0 && ( <button className="btn btn-success mt-3" onClick={() => navigate("/checkout")} > Proceed to Checkout </button> )}
           </div>
         </div>
        </div>

@@ -4,7 +4,6 @@ import {GiDelicatePerfume} from 'react-icons/gi';
 import {useAuth} from '../../context/auth';
 import {IoHomeSharp} from 'react-icons/io5';
 import toast from 'react-hot-toast';
-import { SearchProvider } from '../../context/Search';
 import SearchInput from '../Form/SeachInput'
 import useCategory from '../../hooks/useCategory';
 import { useCart } from '../../context/cart';

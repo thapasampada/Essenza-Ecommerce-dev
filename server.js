@@ -6,41 +6,46 @@ import connectDB from './config/db.js';
 import authRoutes from './routes/authRoute.js';
 import categoryRoutes from './routes/categoryRoutes.js';
 import productRoutes from './routes/productRoutes.js';
-import cors from 'cors';
 import cartRoutes from "./routes/cartRoutes.js";
 import quizRoutes from "./routes/quizRoutes.js";
-
-//configure env
+import paymentRoutes from "./routes/paymentRoutes.js";
+import cors from 'cors';
+import userRoutes from "./routes/userRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js"
+// Configure environment variables
 dotenv.config();
 
-//database
+// Connect to MongoDB
 connectDB();
 
-//rest object
+// Create Express app
 const app = express();
 
-//middlewares
+// Middlewares
 app.use(cors());
-app.use(express.json()); //to accept json data
-app.use(morgan('dev')); //to log requests in development mode
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(morgan('dev'));
 
-//routes
+// Routes
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/category', categoryRoutes);
 app.use('/api/v1/product', productRoutes);
 app.use("/api/v1/cart", cartRoutes);
 app.use("/api/v1/quiz", quizRoutes);
+app.use("/api/payment", paymentRoutes); // Mock payment routes
+app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/order", orderRoutes);
+app.use("/api/v1/admin", adminRoutes);
 
-//rest api
+// Root route
 app.get('/', (req, res) => {
   res.send('<h1>ESSENZA Homepage</h1>');
 });
 
-//secure port
+// Start server
 const PORT = process.env.PORT || 8081;
-
-//run listen
-app.listen(PORT,() => {
-    console.log(`Server Running on ${process.env.DEV_MODE} mode on port ${PORT}`.bgCyan.white);
+app.listen(PORT, () => {
+  console.log(`Server running on ${process.env.DEV_MODE || "development"} mode on port ${PORT}`.bgCyan.white);
 });
-

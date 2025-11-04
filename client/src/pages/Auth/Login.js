@@ -31,6 +31,7 @@ const Login = () => {
           });
           localStorage.setItem("auth", JSON.stringify(res.data));
           navigate(location.state ||"/");
+          
         } else {
           toast.error(res.data.message);
         }
