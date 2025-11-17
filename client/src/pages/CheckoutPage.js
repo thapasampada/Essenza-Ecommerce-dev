@@ -82,7 +82,7 @@ export default function CheckoutPage() {
         <button
           onClick={handleEsewaPay}
           disabled={cart.products.length === 0}
-          className="mt-4 bg-green-600 text-white py-2 px-6 rounded-lg hover:bg-green-700 disabled:opacity-50"
+          className="mt-4 btn py-2 px-6 rounded-lg hover:bg-green-700 disabled:opacity-50"
         >
           Pay with eSewa (Mock)
         </button>
@@ -90,3 +90,4 @@ export default function CheckoutPage() {
     </div>
   );
 }
+

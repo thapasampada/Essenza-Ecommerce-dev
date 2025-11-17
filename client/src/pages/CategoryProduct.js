@@ -29,7 +29,7 @@ const CategoryProduct = () => {
         <h4 className="text-center">Category - {category?.name}</h4>
         <h6 className="text-center">{products?.length} result found </h6>
         <div className="row">
-          <div className="col-md-9 offset-1">
+          <div className="col-md-12 ">
             <div className="d-flex flex-wrap">
               {products?.map((p) => (
                 <div

@@ -28,16 +28,16 @@ export default function FakeEsewa() {
       <p className="mb-4">Amount: Rs. {amt}</p>
       <button
         onClick={handleSuccess}
-        className="bg-green-600 text-white py-2 px-4 rounded-lg mr-4 hover:bg-green-700 transition"
+        className="btn text-white py-2 px-4 rounded-lg mr-4 hover:bg-green-700 transition"
       >
-        Pay Successfully
+        Pay
       </button>
-      <button
+      {/* <button
         onClick={handleFailure}
         className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition"
       >
         Fail Payment
-      </button>
+      </button> */}
     </div>
   );
 }

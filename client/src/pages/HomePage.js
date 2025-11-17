@@ -159,7 +159,6 @@ const HomePage = () => {
               </div>
             </div>
             <div className='col'>
-              {JSON.stringify(radio,null,4)}
               <h1 className='text-center'>All Products</h1>
               <h2 className='text-center'>Featured Products</h2>
               <div className='d-flex flex-wrap'>
