@@ -3,8 +3,12 @@ import Layout from '../components/Layout/Layout';
 import axios from 'axios';
 import { Checkbox, Radio } from 'antd';
 import { Prices } from '../components/Prices';
-
+import { useNavigate } from 'react-router-dom';
+import { useCart } from '../context/cart';
+import toast from 'react-hot-toast';
 const HomePage = () => {
+  const navigate = useNavigate()
+  const [cart,setCart] = useCart()
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [checked, setChecked] = useState([]);
@@ -240,8 +244,16 @@ const HomePage = () => {
                         Rs.{p.price}
                       </p>
                       <div className='d-flex justify-content-center gap-2'>
-                        <button className='btn btn-primary'>See more details</button>
-                        <button className='btn btn-secondary'>Add To Cart</button>
+                        <button className='btn btn-primary' 
+                        onClick={()  => navigate(`/product/${p.slug}`)}>
+                          See more details</button>
+                        <button className='btn btn-secondary' onClick={()=> {
+                          setCart([...cart,p])
+                          localStorage.setItem('cart',JSON.stringify([...cart,p]))
+                          toast.success('Item added to cart')
+                        }}>
+
+                        Add To Cart</button>
                       </div>
                     </div>
                   </div>

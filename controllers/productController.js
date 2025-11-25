@@ -2,7 +2,7 @@ import slugify from "slugify";
 import productModel from "../models/productModel.js";
 import mongoose from "mongoose";
 import fs from "fs";
-
+import categoryModel from "../models/categoryModel.js";
 export const createProductController = async (req, res) => {
     try {
         const {
@@ -348,7 +348,7 @@ export const searchProductController = async (req,res) => {
 }
 
 //silmilar products
-export const relatedProdcutController = async (req,res) =>{
+export const relatedProductController = async (req,res) =>{
     try{
         const {pid, cid} =req.params
         const products = await productModel.find({
@@ -359,7 +359,7 @@ export const relatedProdcutController = async (req,res) =>{
             success: true,
             products,
         })
-    }catch{error}{
+    }catch(error){
         console.log(error)
         res.status(400).send({
             success:false,
@@ -389,3 +389,4 @@ export const productCategoryController = async (req,res) => {
         })
     }
 }
+
